@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>wdnmd</h1>
+<h1>{{ .title }} 1111</h1>
+<h1>hello, go!</h1>
+<p>{{ .descript }} 222</p>
+
+<form action="/uploadfile" method="post" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <input type="submit" name="submit" value="上传文件">
+</form>
+<table>
+    <tr>
+        <th>fileName</th>
+    </tr>
+    {{range .fileList}}
+    <tr>
+        <td><a href="/download/{{.Name}}" >{{.Name}}</a></td>
+    </tr>
+    {{end}}
+</table>
+</body>
+</html>

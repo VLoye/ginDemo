@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+	<conversionRule conversionWord="ip" converterClass="cn.com.agree.afa.core.IpLogger" />
+
+	<appender name="AFA4SJ" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${afa.home}/log/server/platform/${log.name}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>${afa.home}/log/server/platform/${log.name}_%i.log</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>10</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>5MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>
+				%d{yyyy-MM-dd HH:mm:ss.SSS}-[%ip]-[%-5level] %thread %logger{0} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${afa.home}/log/server/platform/console.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>${afa.home}/log/server/platform/console_%i.log</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>10</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>5MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>
+				%d{yyyy-MM-dd HH:mm:ss.SSS}-[%ip]-[%-5level] %thread %logger{0} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS}-[%ip]-[%-5level] %thread %logger{0} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="LSR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${afa.home}/log/server/${log.dir}/lsr/lsr.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>${afa.home}/log/server${log.dir}/lsr/lsr_%i.log</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>10</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>5MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>
+				%d{yyyy-MM-dd HH:mm:ss.SSS}-[%ip]-[%-5level] %thread %logger{0} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="DUMP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${afa.home}/log/server/${log.dir}/dump/dump.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>${afa.home}/log/server/${log.dir}/dump/dump_%i.log
+			</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>10</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>5MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>
+				%n%d{yyyy-MM-dd HH:mm:ss.SSS}-[%ip] - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="SVC" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${afa.home}/log/server/${log.dir}/svc/svc.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>${afa.home}/log/server/${log.dir}/svc/svc_%i.log
+			</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>10</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>5MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>
+				%n%d{yyyy-MM-dd HH:mm:ss.SSS}-[%ip] - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="org.apache.commons.digester3" level="INFO" />
+	<logger name="cn.com.agree.afa" level="DEBUG" />
+	<logger name="cn.com.agree.afa.group" level="INFO" />
+	<logger name="cn.com.agree.afa.core.annotation" level="INFO" />
+	<logger name="cn.com.agree.afa.rpc" level="INFO" />
+	<logger name="cn.com.agree.aesb" level="INFO" />
+	<logger name="cn.com.agree.asdk" level="INFO" />
+	<logger name="io.netty.channel.nio" level="INFO" />
+	<logger name="org.apache.http" level="INFO" />
+	<logger name="cn.com.agree.atask" level="INFO" />
+	<logger name="cn.com.agree.asdk.registry.eureka" level="INFO" />
+	<logger name="org.apache" level="INFO" />
+	<logger name="org.apache.zookeeper.ZooKeeper" level="INFO" />
+	<logger name="cn.com.agree.afa.monitor" level="INFO" />
+
+	<logger name="cn.com.agree.afa.console" additivity="false" level="INFO">
+		<appender-ref ref="CONSOLE" />
+	</logger>
+
+	<logger name="cn.com.agree.afa.lsr.util.LoggerUtils" additivity="false" level="INFO">
+		<appender-ref ref="LSR" />
+	</logger>
+
+	<logger name="cn.com.agree.afa.svc.util.DiscardLogUtils" additivity="false" level="INFO">
+		<appender-ref ref="SVC" />
+	</logger>
+
+	<logger name="cn.com.agree.afa.lsr.spi.AbstractLsrService"
+		additivity="false" level="INFO">
+		<appender-ref ref="DUMP" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="AFA4SJ" />
+	</root>
+</configuration>

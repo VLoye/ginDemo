@@ -1,0 +1,109 @@
+# 替换文件中的环境变量为实际值，$1 - 环境变量名；$2 - 文件名
+function change()
+{
+  old=\${$1}
+  new=$(eval echo \${$1})
+  sed -i "s#${old}#${new}#" $2
+}
+
+function setIfNotExist() {
+  if [ ! $(eval echo \${$1}) ]
+  then
+    export $1=$2
+  fi 
+}
+
+#兼容
+AFA_ENV=${CLUSTER}
+
+change CLUSTER_ID ${AFA_HOME}/conf/node.properties
+change REGISTRY_ADDR ${AFA_HOME}/conf/node.properties
+change REGISTRY_TYPE ${AFA_HOME}/conf/node.properties
+change REGISTRY_CENTER_CLUSTER_ID ${AFA_HOME}/conf/node.properties
+change CONFIG_CENTER_ADDR ${AFA_HOME}/conf/node.properties
+change CONFIG_CENTER_TYPE ${AFA_HOME}/conf/node.properties
+change CONFIG_CENTER_CLUSTER_ID ${AFA_HOME}/conf/node.properties
+change AFA_ENV ${AFA_HOME}/conf/node.properties
+change SYSTEM_CODE ${AFA_HOME}/conf/node.properties
+change ADD_CLUSTER_MODE ${AFA_HOME}/conf/node.properties
+change ENV_NAME ${AFA_HOME}/conf/node.properties
+change APP_CFG_ADDR ${AFA_HOME}/conf/node.properties
+change CHANNEL_ID ${AFA_HOME}/conf/node.properties
+change APP_CFG_TYPE ${AFA_HOME}/conf/node.properties
+
+
+
+DEFAULT_MONITOR_REMOVE=1000
+DEFAULT_MONITOR_THRESHOLD=2000
+DEFAULT_MONITOR_INTERVAL=120000
+DEFAULT_MONITOR_AIM_OPEN=false
+DEFAULT_MONITOR_AIM_PUSH_ISLONGCONNECT=true
+
+setIfNotExist MONITOR_REMOVE ${DEFAULT_MONITOR_REMOVE}
+setIfNotExist MONITOR_THRESHOLD ${DEFAULT_MONITOR_THRESHOLD}
+setIfNotExist MONITOR_AIM_OPEN ${DEFAULT_MONITOR_AIM_OPEN}
+setIfNotExist MONITOR_AIM_PUSH_ISLONGCONNECT ${DEFAULT_MONITOR_AIM_PUSH_ISLONGCONNECT}
+
+keys=(
+  MONITOR_HTTP_INTERVAL
+  MONITOR_FS_INTERVAL
+  MONITOR_CPU_INTERVAL
+  MONITOR_MEM_INTERVAL
+  MONITOR_NET_INTERVAL
+  MONITOR_DISK_INTERVAL
+  MONITOR_JVM_INTERVAL
+  MONITOR_SERVICE_INTERVAL
+  MONITOR_BUSYTHREAD_INTERVAL
+  MONITOR_AFASVC_INTERVAL
+  MONITOR_REGISTRY_INTERVAL
+  MONITOR_LSR_INTERVAL
+  MONITOR_OUT_INTERVAL
+  MONITOR_CACHE_INTERVAL
+  MONITOR_GOVERNMENT_INTERVAL
+  MONITOR_AIM_PUSH_INTERVAL
+)
+
+for key in ${keys[@]}; do
+  setIfNotExist $key ${DEFAULT_MONITOR_INTERVAL}
+done
+
+keys=(
+  AWEB_NEED
+  AWEB_HOST 
+  AWEB_PORT 
+  AWEB_PATH 
+  MONITOR_PATH 
+  MONITOR_OPEN 
+  MONITOR_RECORD 
+  MONITOR_REMOVE 
+  MONITOR_THRESHOLD 
+  MONITOR_HTTP_INTERVAL 
+  MONITOR_FS_INTERVAL 
+  MONITOR_CPU_INTERVAL 
+  MONITOR_MEM_INTERVAL 
+  MONITOR_NET_INTERVAL 
+  MONITOR_DISK_INTERVAL 
+  MONITOR_JVM_INTERVAL
+  MONITOR_SERVICE_INTERVAL
+  MONITOR_BUSYTHREAD_INTERVAL
+  MONITOR_AFASVC_INTERVAL
+  MONITOR_REGISTRY_INTERVAL
+  MONITOR_LSR_INTERVAL
+  MONITOR_OUT_INTERVAL
+  MONITOR_CACHE_INTERVAL
+  MONITOR_GOVERNMENT_INTERVAL
+  MONITOR_AIM_PUSH_INTERVAL
+  MONITOR_AIM_PUSH_HOST
+  MONITOR_AIM_PUSH_PORT
+)
+
+for key in ${keys[@]}; do
+  change $key ${AFA_HOME}/conf/platform/platform.xml
+done
+
+DEFAULT_JVM_OPTIONS="-Xms512m -Xmx512m -XX:SurvivorRatio=16 -Xss512k -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:MaxTenuringThreshold=10 -XX:+CMSParallelRemarkEnabled -XX:CMSInitiatingOccupancyFraction=60 -XX:+UseCMSInitiatingOccupancyOnly -XX:+CMSClassUnloadingEnabled"
+###参数有空格传进函数当作几个入参，不能进行传参
+[[ -z $JVM_OPTIONS ]] &&  JVM_OPTIONS=$DEFAULT_JVM_OPTIONS
+sed -i "s#\${JVM_OPTIONS}#$JVM_OPTIONS#" ${AFA_HOME}/bin/afastart
+
+${AFA_HOME}/bin/afastart --start-foreground
