@@ -32,14 +32,15 @@ func Webhook(ctx *gin.Context, blogConfig Blog) {
 	if tempMap["pusher"]!= nil {
 		log.Printf("pusher is %s\n", tempMap["pusher"])
 
-		cmd1 := exec.Command("cd", blogConfig.Path)
-		b1, err1 :=cmd1.Output()
-		//err1:= cmd1.Run()
-		if err1!=nil{
-			panic(err1)
-		}
-		log.Printf("%s\n", string(b1))
+		//cmd1 := exec.Command("cd", blogConfig.Path)
+		//b1, err1 :=cmd1.Output()
+		////err1:= cmd1.Run()
+		//if err1!=nil{
+		//	panic(err1)
+		//}
+		//log.Printf("%s\n", string(b1))
 		cmd2 := exec.Command("git", "pull")
+		cmd2.Path=blogConfig.Path
 		b2,err2:= cmd2.Output()
 		if err2!=nil{
 			panic(err2)
@@ -47,6 +48,7 @@ func Webhook(ctx *gin.Context, blogConfig Blog) {
 		log.Printf("%s\n", string(b2))
 
 		cmd3 := exec.Command("hexo","g")
+		cmd3.Path=blogConfig.Path
 		b3,err3:= cmd3.Output()
 		if err3!=nil{
 			panic(err3)
